@@ -53,7 +53,6 @@ std::string ShareService::share(const std::vector<std::string> &input, const std
             p = p.relativeTo(wd.get());
         }
 
-        std::string sha256 = Hash::fileSHA256(fp.string());
         std::string filename = fp.filename().string();
 
         LOGD << "Uploading " << p.string();
@@ -74,9 +73,7 @@ std::string ShareService::share(const std::vector<std::string> &input, const std
         // TODO: handle retries
 
         json j = res.getJSON();
-        if (!j.contains("hash")) handleError(res);
-        if (sha256 != j["hash"]) throw NetException(filename + " file got corrupted during upload (hash mismatch, expected: " +
-                                                    sha256 + ", got: " + j["hash"].get<std::string>() + ". Try again.");
+        if (!j.contains("path")) handleError(res);
     }
 
     // Commit
