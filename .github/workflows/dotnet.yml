@@ -44,6 +44,8 @@ jobs:
             submodules: 'recursive'
         - name: Install deps
           run: scripts/ubuntu_deps.sh
+        - name: Setup tmate session
+          uses: mxschmitt/action-tmate@v3
         - name: Run CMake
           run: mkdir build && cd build && cmake -DBUILD_TESTING=OFF ..
         - name: Build C++ lib
