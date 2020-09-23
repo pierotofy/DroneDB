@@ -38,21 +38,64 @@ const ddb = {
         }
     },
 
-    parseFiles: async function(files, options = {}){
-        return new Promise((resolve, reject) => {
-            if (typeof files === "string") files = [files];
+    tile: {
+        getFromUserCache: async function(geotiffPath, tz, tx, ty, options = {}){
+            return new Promise((resolve, reject) => {
+                n._tile_getFromUserCache(geotiffPath, tz, tx, ty, options, (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result);
+                });
+            });
+        }
+    },
 
-            n.parseFiles(files, options, (err, result) => {
+
+    info: async function(files, options = {}){
+        return new Promise((resolve, reject) => {
+            const isSingle = typeof files === "string"; 
+            if (isSingle) files = [files];
+
+            n.info(files, options, (err, result) => {
                 if (err) reject(err);
-                else resolve(result);
+                else{
+                    // Return single item
+                    if (isSingle) resolve(result[0]);
+
+                    // Return entire array
+                    else resolve(result);
+                } 
             });
         });
     },
 
-    parseFile: async function(file, options = {}){
-        const result = await this.parseFiles(file, options);
-        if (result.length) return result[0];
+    init: async function(directory){
+        return new Promise((resolve, reject) => {
+            n.init(directory, (err, result) => {
+                if (err) reject(err);
+                else resolve(result);
+            })
+        });
     },
+
+    add: async function(ddbPath, paths, options = {}){
+        return new Promise((resolve, reject) => {
+            if (typeof paths === "string") paths = [paths];
+            n.add(ddbPath, paths, options, err => {
+                if (err) reject(err);
+                else resolve(true);                
+            });
+        });
+    },
+
+    remove: async function(ddbPath, paths, options = {}){
+        return new Promise((resolve, reject) => {
+            if (typeof paths === "string") paths = [paths];
+            n.remove(ddbPath, paths, options, err => {
+                if (err) reject(err);
+                else resolve(true);     
+            });
+        });
+    }
 };
 
 module.exports = ddb;

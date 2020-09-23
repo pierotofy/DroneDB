@@ -1,0 +1,33 @@
+name: Install Scripts
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  publish-install-script:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Commit files
+      run: |
+        git clone https://github.com/DroneDB/get.dronedb
+        cp scripts/linux_install_script.sh get.dronedb/
+        cd get.dronedb
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "Update scripts" -a || true
+        # The above command will fail if no changes were present, so we ignore
+        # the return code.
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        directory: "get.dronedb"
+        repository: "DroneDB/get.dronedb"
+        github_token: ${{ secrets.BOT_TOKEN }}
+

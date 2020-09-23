@@ -3,12 +3,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <gtest/gtest.h>
-#include "../logger.h"
+#include "logger.h"
+#include "ddb.h"
 
 int main(int argc, char **argv) {
-    init_logger();
-    set_logger_verbose();
+    DDBRegisterProcess(true);
 
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    // TODO: ability to clean previous TestAreas
+
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }

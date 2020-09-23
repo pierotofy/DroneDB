@@ -1,8 +1,9 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
-#include "functions.h"
-#include "../libs/ddb.h"
+#include "ne_functions.h"
+#include "ne_dbops.h"
+#include "ddb.h"
 
 using v8::FunctionTemplate;
 
@@ -10,23 +11,16 @@ using v8::FunctionTemplate;
 // C++ constructs that are exposed to javascript are exported here
 
 NAN_MODULE_INIT(InitAll) {
-  Nan::Set(target, Nan::New("getVersion").ToLocalChecked(),
-    Nan::GetFunction(Nan::New<FunctionTemplate>(getVersion)).ToLocalChecked());
-  Nan::Set(target, Nan::New("typeToHuman").ToLocalChecked(),
-    Nan::GetFunction(Nan::New<FunctionTemplate>(typeToHuman)).ToLocalChecked());
-  Nan::Set(target, Nan::New("parseFiles").ToLocalChecked(),
-    Nan::GetFunction(Nan::New<FunctionTemplate>(parseFiles)).ToLocalChecked());
-  Nan::Set(target, Nan::New("_thumbs_getFromUserCache").ToLocalChecked(),
-    Nan::GetFunction(Nan::New<FunctionTemplate>(_thumbs_getFromUserCache)).ToLocalChecked());
+	NAN_EXPORT(target, getVersion);
+	NAN_EXPORT(target, typeToHuman);
+    NAN_EXPORT(target, info);
+	NAN_EXPORT(target, _thumbs_getFromUserCache);
+    NAN_EXPORT(target, _tile_getFromUserCache);
+    NAN_EXPORT(target, init);
+    NAN_EXPORT(target, add);
+    NAN_EXPORT(target, remove);
 
-  // Nan::Set(target, Nan::New("callback").ToLocalChecked(),
-  //   Nan::GetFunction(Nan::New<FunctionTemplate>(callback)).ToLocalChecked());
-  // Nan::Set(target, Nan::New("callbackWithParameter").ToLocalChecked(),
-  //   Nan::GetFunction(Nan::New<FunctionTemplate>(callbackWithParameter)).ToLocalChecked());
-
-  // Passing target down to the next NAN_MODULE_INIT
-  // MyObject::Init(target);
-  ddb::initialize();
+	DDBRegisterProcess();
 }
 
-NODE_MODULE(NativeExtension, InitAll)
+NODE_MODULE(ddb, InitAll)
