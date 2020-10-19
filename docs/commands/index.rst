@@ -17,6 +17,8 @@ DroneDB exposes several commands via the ``ddb`` command line application.
 	set - Modify EXIF values in files.
 	sync - Sync files and directories in the index with changes from the filesystem
 	thumbs - Generate thumbnails for images and rasters
+	tile - Generate tiles for GeoTIFFs
+	system - Manage ddb
 
 .. toctree::
    :maxdepth: 2
