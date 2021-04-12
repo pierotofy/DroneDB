@@ -2,33 +2,24 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+#include "dbops.h"
+#include "exceptions.h"
 #include "gtest/gtest.h"
-#include "../utils.h"
-#include "../logger.h"
-#include <vector>
-#include <string>
+#include "test.h"
+#include "testarea.h"
+#include "utils.h"
 
 namespace {
 
-TEST(PathsAreChildren, Normal) {
-    EXPECT_TRUE(utils::pathsAreChildren("/my/path", {"/my/path/1", "/my/path"}));
-    EXPECT_TRUE(utils::pathsAreChildren("path", {"path/1/2", "path/3", "path"}));
-    EXPECT_TRUE(utils::pathsAreChildren("path/.", {"path/1/2", "path/3", "path"}));
-    EXPECT_TRUE(utils::pathsAreChildren("path/./", {"path/./../path/"}));
-    EXPECT_TRUE(utils::pathsAreChildren("path/./.", {"path/./../path"}));
+using namespace ddb;
 
-    EXPECT_FALSE(utils::pathsAreChildren("path", {"test", "path/3", "path"}));
-    EXPECT_FALSE(utils::pathsAreChildren("/my/path", {"/my/pat", "/my/path/1"}));
-}
-
-TEST(pathDepth, Normal) {
-    EXPECT_EQ(utils::pathDepth(""), 0);
-    EXPECT_EQ(utils::pathDepth("/"), 0);
-    EXPECT_EQ(utils::pathDepth("/file.txt"), 0);
-    EXPECT_EQ(utils::pathDepth("/a/file.txt"), 1);
-    EXPECT_EQ(utils::pathDepth("/a/b/file.txt"), 2);
-    EXPECT_EQ(utils::pathDepth("."), 0);
-    EXPECT_EQ(utils::pathDepth("./."), 1);
+TEST(utilsTest, generateRandomString) {
+    for (auto n = 0; n < 1000; n++) {
+        auto str = utils::generateRandomString(100);
+        // Uncomment for the WALL OF RANDOM
+        // std::cout << str << std::endl;
+        EXPECT_TRUE(str.length() == 100);
+    }
 }
 
 }

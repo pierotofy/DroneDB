@@ -1176,6 +1176,9 @@ namespace cxxopts
       return m_sequential;
     }
 
+    int argc;
+    char** argv;
+
     private:
 
     void
@@ -1543,6 +1546,8 @@ ParseResult::ParseResult
 , m_positional(std::move(positional))
 , m_next_positional(m_positional.begin())
 , m_allow_unrecognised(allow_unrecognised)
+, argc(argc)
+, argv(argv)
 {
   parse(argc, argv);
 }
@@ -2114,7 +2119,7 @@ inline
 std::string
 Options::help(const std::vector<std::string>& help_groups) const
 {
-  String result = m_help_string + "\nUsage:\n  " +
+  String result = m_help_string + "\n\nUsage:\n  " +
     toLocalString(m_program) + " " + toLocalString(m_custom_help);
 
   if (m_positional.size() > 0 && m_positional_help.size() > 0) {
