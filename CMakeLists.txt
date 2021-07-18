@@ -132,6 +132,7 @@ include_directories("${CMAKE_BINARY_DIR}")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/vendor")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/vendor/cctz/include")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/vendor/exiv2/include")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/vendor/ziplib/Source/ZipLib")
 
 add_library(${PROJECT_NAME} SHARED ${SRC_LIST})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)

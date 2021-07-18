@@ -7,3 +7,6 @@
 [submodule "vendor/untwine"]
 	path = vendor/untwine
 	url = https://github.com/pierotofy/untwine/
+[submodule "vendor/ziplib"]
+	path = vendor/ziplib
+	url = https://github.com/DroneDB/ziplib
