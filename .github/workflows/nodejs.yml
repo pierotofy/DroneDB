@@ -16,6 +16,9 @@ jobs:
                   submodules: 'recursive'
             - name: Install deps
               run: scripts/ubuntu_deps.sh
+            - uses: actions/checkout@v2
+            - name: Setup tmate session
+              uses: mxschmitt/action-tmate@v3
             - name: Build Node.js bindings
               run: npm install
             - name: Test Node.js bindings
