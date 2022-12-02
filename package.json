@@ -25,6 +25,6 @@
   "devDependencies": {
     "cmake-js": "^6.3.0",
     "mocha": "^7.2.0",
-    "nan": "^2.16.0"
+    "nan": "^2.17.0"
   }
 }

@@ -6,6 +6,8 @@ cmake_policy(SET CMP0048 NEW)
 #set (CMAKE_USER_MAKE_RULES_OVERRIDE "${CMAKE_CURRENT_LIST_DIR}/CompilerOptions.cmake")
 project(ddb)
 
+option(SYSTEM_EXIV2 "Use the system's exiv2 library if possible" OFF)
+
 # Read version
 file(READ "package.json" PACKAGE_JSON)
 string(REGEX MATCH "\"version\": \"[0-9]+\\.[0-9]+\\.[0-9]+" APP_VERSION ${PACKAGE_JSON})
@@ -163,20 +165,30 @@ if (NOT WIN32 AND NOT APPLE)
     set(STDPPFS_LIBRARY stdc++fs)
 endif()
 
-set(LINK_LIBRARIES ${SPATIALITE_LIBRARY} ${SQLITE3_LIBRARY} ${STDPPFS_LIBRARY} exiv2lib ${GDAL_LIBRARY} ${CURL_LIBRARY} ${PDAL_LIBRARIES} ${Zip_LIBRARIES} ${NXS_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+set(EXIV2_LIB exiv2lib)
+if (SYSTEM_EXIV2)
+    find_package(Exiv2 REQUIRED)
+    set(EXIV2_LIB ${EXIV2_LIBRARY})
+endif()
+
+set(LINK_LIBRARIES ${SPATIALITE_LIBRARY} ${SQLITE3_LIBRARY} ${STDPPFS_LIBRARY} ${EXIV2_LIB} ${GDAL_LIBRARY} ${CURL_LIBRARY} ${PDAL_LIBRARIES} ${Zip_LIBRARIES} ${NXS_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 set(CMD_SRC_LIST ${CMAKE_CURRENT_SOURCE_DIR}/src/cmd/main.cpp)
 
 add_subdirectory("src")
 add_subdirectory("vendor")
 
-set_target_properties(exiv2lib PROPERTIES CXX_STANDARD 17)
-
+if (NOT SYSTEM_EXIV2)
+    set_target_properties(exiv2lib PROPERTIES CXX_STANDARD 17)
+endif()
 
 include_directories("src")
 include_directories("${CMAKE_BINARY_DIR}")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/vendor")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/vendor/cctz/include")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/vendor/exiv2/include")
+
+if (NOT SYSTEM_EXIV2)
+    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/vendor/exiv2/include")
+endif()
 
 if (HOMEBREW_INSTALL_PREFIX)
     # Some weird stuff happens with libspatialite on macOS
@@ -186,7 +198,10 @@ else()
     add_library(${PROJECT_NAME} SHARED ${SRC_LIST})
 endif()
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
+
+if (NOT SYSTEM_EXIV2)
 add_dependencies(${PROJECT_NAME} exiv2lib)
+endif()
 
 if (NOT NXS_FOUND)
     message(WARNING "Nexus support will not be built")
